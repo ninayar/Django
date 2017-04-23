@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enter Location</title>
+  <!---Load Static Files-->
+  {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'location/style.css' %}"/>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+</head>
+<body>
+<!--Nagivation Bar-->
+<div class="topnav" id="myTopnav">
+  <a href="/location/">Enter Region</a>
+  <a href="/location/check/">Enter Location</a>
+</div>
+<h1>Test Location</h1>
+<!--Instruction Bar-->
+<div class="instructions">
+  <h4>Instructions</h4>
+  <p>The entered location is compared with the regions already entered to see if is contained in any of them.<br>
+    A cumulative score is then calculated which is a sum of the score of the new location and the region in which
+    it is contained. Score should be 0 otherwise.</p>
+  <p>
+    Regions:<br>
+    Koramanagala, Bangalore, India score:5<br>
+    San Francisco, California, USA score:3<br>
+    China score:4<br>
+    Europe score:0<br>
+    Karnataka, India score:4<br>
+    Location: Koramangala, 4th Block, Koramangala, Bangalore, Karnataka,India<br>
+    cumulative score: 8<br>
+  </p>
+</div>
+<!--Form section-->
+<form action="/location/check/" name="enterloc" method="post">
+  {%csrf_token%}
+  <!--Code for displaying the final score-->
+  {%if score%}
+  <h4>Cumulative Score of the previous entry is {{ score.score }}.</h4>
+  <p>Lets test a another entry!</p>
+  {%endif%}
+  <p><label>Location:</label><input type="text" name="place" id="geocomplete" placeholder="Enter Address"></p>
+  <div class="details">
+    <label>Latitude: </label><input name="lat" type="text" data-geo="lat" readonly/><br>
+    <label>Longitude: </label><input name="lng" type="text" data-geo="lng" readonly/><br>
+    <label>Address: </label><input name="formatted_address" type="text" data-geo="formatted_address"
+                                   readonly/><br>
+    <label>Country Code: </label><input name="country_short" type="text" data-geo="country_short" readonly/><br>
+  </div>
+<!--This is the location score-->
+  <!--It is meant to be the intermediatary score so should be 0 initially-->
+  <!--In the database, after calculating the cumulative it is stored in column corresponding to this field-->
+  <!--However, since the form is refreshed for new entry, displaying it back in this field makes no sense-->
+  <!--So it is displayed seperately above-->
+  <p><label>Score:</label><input type="text" name="score" id="score" default="0" value="0" readonly></p>
+  <p><input type="submit" value="Enter" id="enter"></p>
+</form>
+<!--Scrips for using Google API-->
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ubilabs.github.io/geocomplete/jquery.geocomplete.js"></script>
+<script>
+    $(function(){
+        $("#geocomplete").geocomplete({
+            details: ".details",
+            detailsAttribute: "data-geo"
+        });
+      });
+
+</script>
+</body>
+</html>

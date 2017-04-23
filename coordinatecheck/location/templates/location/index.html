@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Region Scorer</title>
+  <!---Load Static Files-->
+  {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'location/style.css' %}"/>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+</head>
+<body>
+<!--Navigation Bars-->
+<div class="topnav" id="myTopnav">
+  <a href="/location/">Enter Region</a>
+  <a href="/location/check/">Enter Location</a>
+</div>
+<!--Instructions Bar-->
+<div class="instructions">
+  <H1>Location Checker</H1>
+  <h3>Enter Regions</h3>
+  <p>Use the search field to query a location. <br>
+    This will load the lattitude and longitude. Give a unique score(Eg: within 1-5) to each region.<br>
+    After filling region proceed to "Enter Location" to test </p>
+</div>
+<!--Form section-->
+<form action="/location/" name="Regions" method="post">
+  {% csrf_token %}
+  <p><label>Region:</label><input type="text" name="place" id="geocomplete" placeholder="Enter Address"></p>
+  <div class="details">
+    <label>Latitude: </label><input name="lat" type="text" data-geo="lat" readonly/><br>
+    <label>Longitude: </label><input name="lng" type="text" data-geo="lng" readonly/><br>
+    <label>Address: </label><input name="formatted_address" type="text" data-geo="formatted_address" readonly/><br>
+    <label>Country Code: </label><input name="country_short" type="text" data-geo="country_short" readonly/><br>
+  </div>
+  <p><label>Score:</label><input type="text" name="score" id="score" placeholder="Enter Score"></p>
+  <p><input type="submit" value="Enter" id="enter"></p>
+</form>
+<!--Scrips for using Google API-->
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ubilabs.github.io/geocomplete/jquery.geocomplete.js"></script>
+<script>
+    $(function(){
+        $("#geocomplete").geocomplete({
+            details: ".details",
+            detailsAttribute: "data-geo"
+        });
+      //  $("#geocomplete_loc").geocomplete({
+      //      details: ".details_loc",
+      //    detailsAttribute: "data-geo"
+      //  });
+      });
+
+
+
+</script>
+</body>
+</html>
